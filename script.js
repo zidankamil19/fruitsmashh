@@ -5,7 +5,7 @@
 
 // MASUKKAN URL GOOGLE APPS SCRIPT DISINI
 
-const API_URL = "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DISINI";
+const API_URL = "https://script.google.com/macros/s/AKfycbzPlwu6BfpEmSyW2iYCXpgbwbULByT8tf6qSp8gADtUSOVEZRQbM0CKfQQzRJKehe3MBg/exec";
 
 
 // ========================================
