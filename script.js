@@ -1,14 +1,16 @@
-// ==========================================
-// FRUIT SMASH - GAME CONFIG
-// ==========================================
-
-// GANTI DENGAN URL GOOGLE APPS SCRIPT KAMU
-const API_URL = "https://script.google.com/macros/s/AKfycbxXFTmtCMx3xp4XFhMF0ZggYtp6YkvME2p9_ItKDHX2BfUyRSp_3QoqadfB9Dt3DhwcQw/exec";
+// ========================================
+// FRUIT SMASH GAME
+// ========================================
 
 
-// ==========================================
+// MASUKKAN URL GOOGLE APPS SCRIPT DISINI
+
+const API_URL = "MASUKKAN_URL_GOOGLE_APPS_SCRIPT_DISINI";
+
+
+// ========================================
 // ELEMENT
-// ==========================================
+// ========================================
 
 const screens = document.querySelectorAll(".screen");
 
@@ -57,9 +59,6 @@ const soundBtn =
 const gameArea =
     document.getElementById("gameArea");
 
-const effectLayer =
-    document.getElementById("effectLayer");
-
 
 const scoreDisplay =
     document.getElementById("score");
@@ -84,9 +83,9 @@ const leaderboardList =
     document.getElementById("leaderboardList");
 
 
-// ==========================================
-// GAME DATA
-// ==========================================
+// ========================================
+// GAME VARIABLES
+// ========================================
 
 const fruits = [
     "🍎",
@@ -95,64 +94,53 @@ const fruits = [
     "🍓",
     "🍇",
     "🍍",
-    "🥝",
     "🍑",
     "🍒",
+    "🥝",
     "🍌"
 ];
 
 
 let score = 0;
-
 let combo = 0;
-
 let timeLeft = 60;
 
 let gameRunning = false;
 
 let playerName = "";
-
 let playerPhone = "";
 
-let spawnInterval = null;
-
-let timerInterval = null;
+let spawnInterval;
+let timerInterval;
 
 let soundEnabled = true;
-
 let audioContext = null;
 
 
-// ==========================================
-// SCREEN FUNCTION
-// ==========================================
+// ========================================
+// SHOW SCREEN
+// ========================================
 
 function showScreen(screen) {
 
     screens.forEach(item => {
-
         item.classList.remove("active");
-
     });
 
     screen.classList.add("active");
-
 }
 
 
-// ==========================================
-// START BUTTON
-// ==========================================
+// ========================================
+// START GAME BUTTON
+// ========================================
 
-startBtn.addEventListener(
-    "click",
-    startGame
-);
+startBtn.addEventListener("click", startGame);
 
 
-// ==========================================
+// ========================================
 // START GAME
-// ==========================================
+// ========================================
 
 function startGame() {
 
@@ -165,48 +153,38 @@ function startGame() {
 
     if (playerName.length < 2) {
 
-        alert(
-            "Username minimal 2 karakter!"
-        );
+        alert("Username minimal 2 karakter!");
 
         return;
-
     }
 
 
     if (playerPhone.length < 8) {
 
-        alert(
-            "Masukkan nomor WhatsApp yang benar!"
-        );
+        alert("Masukkan nomor WhatsApp yang benar!");
 
         return;
-
     }
 
 
     initAudio();
-
 
     showScreen(gameScreen);
 
     resetGame();
 
     startGameLoop();
-
 }
 
 
-// ==========================================
+// ========================================
 // RESET GAME
-// ==========================================
+// ========================================
 
 function resetGame() {
 
     score = 0;
-
     combo = 0;
-
     timeLeft = 60;
 
     gameRunning = true;
@@ -217,74 +195,75 @@ function resetGame() {
 
     gameArea
         .querySelectorAll(
-            ".fruit, .bomb, .explosion"
+            ".fruit, .bomb, .particle, .explosion, .score-popup"
         )
-        .forEach(element => element.remove());
-
+        .forEach(item => item.remove());
 }
 
 
-// ==========================================
-// START LOOP
-// ==========================================
+// ========================================
+// GAME LOOP
+// ========================================
 
 function startGameLoop() {
 
     clearInterval(spawnInterval);
-
     clearInterval(timerInterval);
 
 
-    // Spawn object
-    spawnInterval =
-        setInterval(() => {
+    // SPAWN OBJECT
 
-            if (!gameRunning) return;
+    spawnInterval = setInterval(() => {
 
-            spawnObject();
+        if (!gameRunning) return;
 
-        }, 650);
+        spawnObject();
+
+    }, 700);
 
 
-    // Spawn pertama
+    // SPAWN PERTAMA
+
     spawnObject();
 
 
-    // Timer
-    timerInterval =
-        setInterval(() => {
+    // TIMER
 
-            if (!gameRunning) return;
+    timerInterval = setInterval(() => {
 
-            timeLeft--;
+        if (!gameRunning) return;
 
-            updateUI();
+        timeLeft--;
+
+        updateUI();
 
 
-            if (timeLeft <= 0) {
+        if (timeLeft <= 0) {
 
-                endGame();
+            endGame();
 
-            }
+        }
 
-        }, 1000);
-
+    }, 1000);
 }
 
 
-// ==========================================
+// ========================================
 // SPAWN OBJECT
-// ==========================================
+// ========================================
 
 function spawnObject() {
+
+    if (!gameRunning) return;
+
 
     const random = Math.random();
 
 
-    // 82% BUAH
-    // 18% BOM
+    // 80% BUAH
+    // 20% BOM
 
-    if (random < 0.82) {
+    if (random < 0.80) {
 
         createFruit();
 
@@ -293,54 +272,39 @@ function spawnObject() {
         createBomb();
 
     }
-
 }
 
 
-// ==========================================
+// ========================================
 // RANDOM POSITION
-// ==========================================
+// ========================================
 
-function getRandomPosition(
-    size = 100
-) {
+function randomPosition() {
 
-    const areaWidth =
+    const width =
         gameArea.clientWidth;
 
-    const areaHeight =
+    const height =
         gameArea.clientHeight;
 
 
-    const maxX =
-        areaWidth - size;
+    const x =
+        Math.random() *
+        (width - 90);
 
-    const maxY =
-        areaHeight - size - 70;
+    const y =
+        70 +
+        Math.random() *
+        (height - 180);
 
 
-    return {
-
-        x:
-            Math.max(
-                10,
-                Math.random() * maxX
-            ),
-
-        y:
-            Math.max(
-                50,
-                Math.random() * maxY
-            )
-
-    };
-
+    return { x, y };
 }
 
 
-// ==========================================
+// ========================================
 // CREATE FRUIT
-// ==========================================
+// ========================================
 
 function createFruit() {
 
@@ -354,21 +318,20 @@ function createFruit() {
     fruit.className = "fruit";
 
 
-    const fruitEmoji =
+    const emoji =
         fruits[
             Math.floor(
-                Math.random()
-                * fruits.length
+                Math.random() *
+                fruits.length
             )
         ];
 
 
-    fruit.textContent =
-        fruitEmoji;
+    fruit.textContent = emoji;
 
 
     const position =
-        getRandomPosition();
+        randomPosition();
 
 
     fruit.style.left =
@@ -383,20 +346,20 @@ function createFruit() {
 
     fruit.addEventListener(
         "pointerdown",
-        event => {
+        function(event) {
 
             event.preventDefault();
 
             sliceFruit(
                 fruit,
-                fruitEmoji
+                emoji
             );
 
         }
     );
 
 
-    // Hilang otomatis
+    // HILANG OTOMATIS
 
     setTimeout(() => {
 
@@ -413,14 +376,13 @@ function createFruit() {
 
         }
 
-    }, 1800);
-
+    }, 2000);
 }
 
 
-// ==========================================
+// ========================================
 // SLICE FRUIT
-// ==========================================
+// ========================================
 
 function sliceFruit(
     fruit,
@@ -438,11 +400,11 @@ function sliceFruit(
     let points = 10;
 
 
-    // COMBO BONUS
+    // BONUS COMBO
 
     if (combo >= 5) {
 
-        points += combo * 3;
+        points += combo * 2;
 
     }
 
@@ -456,14 +418,14 @@ function sliceFruit(
     playSliceSound();
 
 
-    fruit.classList.add("sliced");
-
-
     const x =
         fruit.offsetLeft;
 
     const y =
         fruit.offsetTop;
+
+
+    fruit.classList.add("sliced");
 
 
     createParticles(
@@ -486,13 +448,12 @@ function sliceFruit(
         fruit.remove();
 
     }, 400);
-
 }
 
 
-// ==========================================
+// ========================================
 // CREATE BOMB
-// ==========================================
+// ========================================
 
 function createBomb() {
 
@@ -509,7 +470,7 @@ function createBomb() {
 
 
     const position =
-        getRandomPosition();
+        randomPosition();
 
 
     bomb.style.left =
@@ -524,7 +485,7 @@ function createBomb() {
 
     bomb.addEventListener(
         "pointerdown",
-        event => {
+        function(event) {
 
             event.preventDefault();
 
@@ -542,14 +503,13 @@ function createBomb() {
 
         }
 
-    }, 2000);
-
+    }, 2200);
 }
 
 
-// ==========================================
-// BOMB EXPLOSION
-// ==========================================
+// ========================================
+// EXPLODE BOMB
+// ========================================
 
 function explodeBomb(bomb) {
 
@@ -570,11 +530,8 @@ function explodeBomb(bomb) {
 
     score -= 30;
 
-
     if (score < 0) {
-
         score = 0;
-
     }
 
 
@@ -587,8 +544,6 @@ function explodeBomb(bomb) {
     playExplosionSound();
 
 
-    // SHAKE SCREEN
-
     gameArea.classList.add("shake");
 
 
@@ -599,8 +554,6 @@ function explodeBomb(bomb) {
     }, 400);
 
 
-    // EXPLOSION
-
     const explosion =
         document.createElement("div");
 
@@ -608,15 +561,14 @@ function explodeBomb(bomb) {
     explosion.className =
         "explosion";
 
-    explosion.textContent =
-        "💥";
+    explosion.textContent = "💥";
 
 
     explosion.style.left =
-        (x - 20) + "px";
+        (x - 10) + "px";
 
     explosion.style.top =
-        (y - 20) + "px";
+        (y - 10) + "px";
 
 
     gameArea.appendChild(explosion);
@@ -635,13 +587,12 @@ function explodeBomb(bomb) {
         explosion.remove();
 
     }, 600);
-
 }
 
 
-// ==========================================
+// ========================================
 // PARTICLES
-// ==========================================
+// ========================================
 
 function createParticles(
     x,
@@ -649,11 +600,7 @@ function createParticles(
     emoji
 ) {
 
-    for (
-        let i = 0;
-        i < 7;
-        i++
-    ) {
+    for (let i = 0; i < 8; i++) {
 
         const particle =
             document.createElement("div");
@@ -675,12 +622,10 @@ function createParticles(
 
 
         const moveX =
-            (Math.random() - 0.5)
-            * 160;
+            (Math.random() - 0.5) * 180;
 
         const moveY =
-            (Math.random() - 0.5)
-            * 160;
+            (Math.random() - 0.5) * 180;
 
 
         particle.style.setProperty(
@@ -694,9 +639,7 @@ function createParticles(
         );
 
 
-        gameArea.appendChild(
-            particle
-        );
+        gameArea.appendChild(particle);
 
 
         setTimeout(() => {
@@ -704,15 +647,13 @@ function createParticles(
             particle.remove();
 
         }, 700);
-
     }
-
 }
 
 
-// ==========================================
+// ========================================
 // SCORE POPUP
-// ==========================================
+// ========================================
 
 function showScorePopup(
     x,
@@ -730,16 +671,11 @@ function showScorePopup(
 
 
     if (negative) {
-
-        popup.classList.add(
-            "negative-score"
-        );
-
+        popup.classList.add("negative");
     }
 
 
-    popup.textContent =
-        text;
+    popup.textContent = text;
 
 
     popup.style.left =
@@ -757,13 +693,12 @@ function showScorePopup(
         popup.remove();
 
     }, 800);
-
 }
 
 
-// ==========================================
+// ========================================
 // UPDATE UI
-// ==========================================
+// ========================================
 
 function updateUI() {
 
@@ -775,13 +710,12 @@ function updateUI() {
 
     comboDisplay.textContent =
         "x" + combo;
-
 }
 
 
-// ==========================================
+// ========================================
 // END GAME
-// ==========================================
+// ========================================
 
 async function endGame() {
 
@@ -791,13 +725,8 @@ async function endGame() {
     gameRunning = false;
 
 
-    clearInterval(
-        spawnInterval
-    );
-
-    clearInterval(
-        timerInterval
-    );
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
 
 
     playGameOverSound();
@@ -810,24 +739,24 @@ async function endGame() {
         playerName;
 
 
-    if (score >= 800) {
+    if (score >= 700) {
 
         scoreMessage.textContent =
             "👑 LEGENDARY! Kamu Master Fruit Smash!";
 
     }
 
-    else if (score >= 500) {
+    else if (score >= 400) {
 
         scoreMessage.textContent =
-            "🔥 LUAR BIASA! Refleks kamu cepat!";
+            "🔥 LUAR BIASA! Kamu sangat cepat!";
 
     }
 
-    else if (score >= 250) {
+    else if (score >= 200) {
 
         scoreMessage.textContent =
-            "⭐ Bagus sekali! Terus berlatih!";
+            "⭐ Bagus! Terus tingkatkan kemampuanmu!";
 
     }
 
@@ -838,83 +767,65 @@ async function endGame() {
     }
 
 
-    showScreen(
-        gameOverScreen
-    );
+    showScreen(gameOverScreen);
 
 
     // SIMPAN KE GOOGLE SHEETS
 
     saveScoreToGoogleSheets();
-
 }
 
 
-// ==========================================
-// GOOGLE SHEETS SAVE
-// ==========================================
+// ========================================
+// SAVE GOOGLE SHEETS
+// ========================================
 
 async function saveScoreToGoogleSheets() {
 
-    // Jika URL belum diisi
+    // Jika API belum diisi
 
     if (
         API_URL.includes(
-            "PASTE_GOOGLE"
+            "MASUKKAN_URL"
         )
     ) {
 
         console.log(
-            "Google Sheets belum dikonfigurasi"
+            "API belum dikonfigurasi"
         );
 
         saveLocalScore();
 
         return;
-
     }
 
 
     try {
 
-        await fetch(
-            API_URL,
-            {
+        await fetch(API_URL, {
 
-                method: "POST",
+            method: "POST",
 
-                mode: "no-cors",
+            mode: "no-cors",
 
-                headers: {
+            body: JSON.stringify({
 
-                    "Content-Type":
-                        "application/json"
+                username:
+                    playerName,
 
-                },
+                phone:
+                    playerPhone,
 
-                body:
-                    JSON.stringify({
+                score:
+                    score
 
-                        action:
-                            "save",
+            })
 
-                        username:
-                            playerName,
-
-                        phone:
-                            playerPhone,
-
-                        score:
-                            score
-
-                    })
-
-            }
-        );
+        });
 
 
         console.log(
-            "Score dikirim!"
+            "Score berhasil dikirim"
         );
 
     }
@@ -922,24 +833,23 @@ async function saveScoreToGoogleSheets() {
     catch (error) {
 
         console.error(
-            "Gagal mengirim score:",
+            "Gagal menyimpan:",
             error
         );
 
+
         saveLocalScore();
-
     }
-
 }
 
 
-// ==========================================
-// LOCAL BACKUP
-// ==========================================
+// ========================================
+// LOCAL STORAGE BACKUP
+// ========================================
 
 function saveLocalScore() {
 
-    let scores =
+    let data =
         JSON.parse(
             localStorage.getItem(
                 "fruitSmashScores"
@@ -947,7 +857,7 @@ function saveLocalScore() {
         ) || [];
 
 
-    scores.push({
+    data.push({
 
         username:
             playerName,
@@ -958,27 +868,25 @@ function saveLocalScore() {
     });
 
 
-    scores.sort(
+    data.sort(
         (a, b) =>
             b.score - a.score
     );
 
 
-    scores =
-        scores.slice(0, 10);
+    data = data.slice(0, 10);
 
 
     localStorage.setItem(
         "fruitSmashScores",
-        JSON.stringify(scores)
+        JSON.stringify(data)
     );
-
 }
 
 
-// ==========================================
-// LEADERBOARD BUTTON
-// ==========================================
+// ========================================
+// SHOW LEADERBOARD
+// ========================================
 
 leaderboardBtn.addEventListener(
     "click",
@@ -991,10 +899,6 @@ leaderboardBtn2.addEventListener(
 );
 
 
-// ==========================================
-// SHOW LEADERBOARD
-// ==========================================
-
 async function showLeaderboard() {
 
     showScreen(
@@ -1002,27 +906,25 @@ async function showLeaderboard() {
     );
 
 
-    leaderboardList.innerHTML =
-        `
+    leaderboardList.innerHTML = `
         <p class="loading">
-            ⏳ Memuat pemain terbaik...
+            ⏳ Memuat leaderboard...
         </p>
-        `;
+    `;
 
 
-    // Jika belum ada API
-    // gunakan local storage
+    // Jika API belum diisi
+    // gunakan LocalStorage
 
     if (
         API_URL.includes(
-            "PASTE_GOOGLE"
+            "MASUKKAN_URL"
         )
     ) {
 
         loadLocalLeaderboard();
 
         return;
-
     }
 
 
@@ -1035,30 +937,48 @@ async function showLeaderboard() {
             );
 
 
-        const data =
+        const result =
             await response.json();
 
 
-        renderLeaderboard(
-            data
+        console.log(
+            "Leaderboard:",
+            result
         );
+
+
+        if (result.success) {
+
+            renderLeaderboard(
+                result.data
+            );
+
+        }
+
+        else {
+
+            loadLocalLeaderboard();
+
+        }
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Leaderboard error:",
+            error
+        );
+
 
         loadLocalLeaderboard();
-
     }
-
 }
 
 
-// ==========================================
+// ========================================
 // LOCAL LEADERBOARD
-// ==========================================
+// ========================================
 
 function loadLocalLeaderboard() {
 
@@ -1071,31 +991,31 @@ function loadLocalLeaderboard() {
 
 
     renderLeaderboard(data);
-
 }
 
 
-// ==========================================
+// ========================================
 // RENDER LEADERBOARD
-// ==========================================
+// ========================================
 
 function renderLeaderboard(data) {
 
     leaderboardList.innerHTML = "";
 
 
-    if (!data || data.length === 0) {
+    if (
+        !data ||
+        data.length === 0
+    ) {
 
-        leaderboardList.innerHTML =
-            `
+        leaderboardList.innerHTML = `
             <p class="loading">
-                Belum ada pemain!<br>
-                Jadilah yang pertama! 🎮
+                🎮 Belum ada pemain!<br>
+                Jadilah pemain pertama!
             </p>
-            `;
+        `;
 
         return;
-
     }
 
 
@@ -1105,31 +1025,30 @@ function renderLeaderboard(data) {
             let medal = "🏅";
 
 
-            if (index === 0)
+            if (index === 0) {
                 medal = "🥇";
+            }
 
-            else if (index === 1)
+            else if (index === 1) {
                 medal = "🥈";
+            }
 
-            else if (index === 2)
+            else if (index === 2) {
                 medal = "🥉";
+            }
 
 
             const row =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             row.className =
                 "leaderboard-row";
 
 
-            row.innerHTML =
-                `
+            row.innerHTML = `
                 <span>
-                    ${medal}
-                    #${index + 1}
+                    ${medal} #${index + 1}
                 </span>
 
                 <span>
@@ -1141,60 +1060,55 @@ function renderLeaderboard(data) {
                 <span>
                     ⭐ ${player.score}
                 </span>
-                `;
+            `;
 
 
-            leaderboardList.appendChild(
-                row
-            );
-
+            leaderboardList.appendChild(row);
         }
     );
-
 }
 
 
-// ==========================================
+// ========================================
 // ESCAPE HTML
-// ==========================================
+// ========================================
 
 function escapeHTML(text) {
 
     const div =
         document.createElement("div");
 
-    div.textContent = text;
+    div.textContent =
+        text || "Player";
 
     return div.innerHTML;
-
 }
 
 
-// ==========================================
+// ========================================
 // PLAY AGAIN
-// ==========================================
+// ========================================
 
 playAgainBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
         showScreen(gameScreen);
 
         resetGame();
 
         startGameLoop();
-
     }
 );
 
 
-// ==========================================
+// ========================================
 // HOME
-// ==========================================
+// ========================================
 
 homeBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
         showScreen(loginScreen);
 
@@ -1204,7 +1118,7 @@ homeBtn.addEventListener(
 
 backLeaderboardBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
         showScreen(loginScreen);
 
@@ -1212,10 +1126,9 @@ backLeaderboardBtn.addEventListener(
 );
 
 
-// ==========================================
-// SOUND SYSTEM
-// WEB AUDIO API
-// ==========================================
+// ========================================
+// AUDIO
+// ========================================
 
 function initAudio() {
 
@@ -1226,7 +1139,6 @@ function initAudio() {
                 window.AudioContext ||
                 window.webkitAudioContext
             )();
-
     }
 
 
@@ -1236,19 +1148,17 @@ function initAudio() {
     ) {
 
         audioContext.resume();
-
     }
-
 }
 
 
-// ==========================================
-// SOUND TOGGLE
-// ==========================================
+// ========================================
+// SOUND BUTTON
+// ========================================
 
 soundBtn.addEventListener(
     "click",
-    () => {
+    function() {
 
         soundEnabled =
             !soundEnabled;
@@ -1263,9 +1173,9 @@ soundBtn.addEventListener(
 );
 
 
-// ==========================================
-// GENERATE SOUND
-// ==========================================
+// ========================================
+// PLAY TONE
+// ========================================
 
 function playTone(
     frequency,
@@ -1286,7 +1196,8 @@ function playTone(
         audioContext.createGain();
 
 
-    oscillator.type = type;
+    oscillator.type =
+        type;
 
     oscillator.frequency.value =
         frequency;
@@ -1318,18 +1229,17 @@ function playTone(
         audioContext.currentTime +
         duration
     );
-
 }
 
 
-// ==========================================
-// SLICE SOUND
-// ==========================================
+// ========================================
+// FRUIT SOUND
+// ========================================
 
 function playSliceSound() {
 
     playTone(
-        700,
+        600,
         0.08,
         "square",
         0.08
@@ -1342,46 +1252,51 @@ function playSliceSound() {
             1000,
             0.1,
             "sine",
-            0.06
+            0.07
         );
 
     }, 50);
-
 }
 
 
-// ==========================================
-// EXPLOSION SOUND
-// ==========================================
+// ========================================
+// BOMB SOUND
+// ========================================
 
 function playExplosionSound() {
 
     playTone(
-        100,
+        90,
         0.4,
         "sawtooth",
         0.15
     );
 
 
-    playTone(
-        60,
-        0.5,
-        "square",
-        0.08
-    );
+    setTimeout(() => {
 
+        playTone(
+            50,
+            0.4,
+            "square",
+            0.1
+        );
+
+    }, 50);
 }
 
 
-// ==========================================
+// ========================================
 // GAME OVER SOUND
-// ==========================================
+// ========================================
 
 function playGameOverSound() {
 
-    const notes =
-        [500, 400, 300];
+    const notes = [
+        500,
+        400,
+        300
+    ];
 
 
     notes.forEach(
@@ -1400,5 +1315,4 @@ function playGameOverSound() {
 
         }
     );
-
-          }
+}
