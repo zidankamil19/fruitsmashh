@@ -2,11 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
-
-    <meta name="theme-color" content="#6c63ff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Fruit Smash 🍉</title>
 
@@ -15,17 +11,12 @@
 
 <body>
 
-    <!-- BACKGROUND DECORATION -->
+    <!-- BACKGROUND -->
     <div class="background">
-
-        <div class="bg-fruit fruit-a">🍎</div>
-        <div class="bg-fruit fruit-b">🍊</div>
-        <div class="bg-fruit fruit-c">🍓</div>
-        <div class="bg-fruit fruit-d">🍉</div>
-
-        <div class="cloud c1">☁️</div>
-        <div class="cloud c2">☁️</div>
-
+        <div class="floating f1">🍎</div>
+        <div class="floating f2">🍊</div>
+        <div class="floating f3">🍓</div>
+        <div class="floating f4">🍉</div>
     </div>
 
 
@@ -33,47 +24,39 @@
 
 
         <!-- ================= LOGIN ================= -->
-
         <section id="loginScreen" class="screen active">
 
             <div class="logo">
-
-                <div class="logo-fruits">
-                    🍉 🍓 🍊
-                </div>
+                <div class="logo-fruit">🍉🍓🍊</div>
 
                 <h1>FRUIT<br>SMASH</h1>
 
-                <p>Slice • Smash • Score!</p>
-
+                <p>Potong Buah • Kumpulkan Poin • Jadi Juara!</p>
             </div>
 
 
-            <div class="login-card">
+            <div class="card login-card">
 
                 <h2>🎮 Ayo Bermain!</h2>
 
-                <p>
-                    Masukkan data kamu sebelum bermain
+                <p class="subtitle">
+                    Masukkan data sebelum bermain
                 </p>
 
 
                 <div class="input-group">
-
                     <label>👤 Username</label>
 
                     <input
                         type="text"
                         id="username"
-                        placeholder="Contoh: Budi"
+                        placeholder="Masukkan username"
                         maxlength="15"
                     >
-
                 </div>
 
 
                 <div class="input-group">
-
                     <label>📱 Nomor WhatsApp</label>
 
                     <input
@@ -82,33 +65,26 @@
                         placeholder="08xxxxxxxxxx"
                         maxlength="15"
                     >
-
                 </div>
 
 
-                <button
-                    id="startBtn"
-                    class="main-button"
-                >
+                <button id="startBtn" class="btn primary">
                     🚀 MULAI BERMAIN
                 </button>
 
 
-                <button
-                    id="leaderboardBtn"
-                    class="secondary-button"
-                >
-                    🏆 LIHAT LEADERBOARD
+                <button id="leaderboardBtn" class="btn secondary">
+                    🏆 LEADERBOARD
                 </button>
 
             </div>
 
 
-            <div class="mini-rules">
+            <div class="rules">
 
-                <span>🍎 +10 POIN</span>
-                <span>🔥 COMBO</span>
-                <span>💣 -30 POIN</span>
+                <div>🍎 <b>+10</b> POIN</div>
+                <div>🔥 <b>COMBO</b> BONUS</div>
+                <div>💣 <b>-30</b> POIN</div>
 
             </div>
 
@@ -117,75 +93,45 @@
 
 
         <!-- ================= GAME ================= -->
-
         <section id="gameScreen" class="screen">
 
-            <header class="game-header">
+            <div class="game-header">
 
-                <div class="stat-card score-stat">
-
-                    <span>⭐ SCORE</span>
-
-                    <strong id="score">
-                        0
-                    </strong>
-
+                <div class="stat">
+                    <small>⭐ SCORE</small>
+                    <strong id="score">0</strong>
                 </div>
 
-
-                <div class="stat-card time-stat">
-
-                    <span>⏱ WAKTU</span>
-
-                    <strong id="time">
-                        60
-                    </strong>
-
+                <div class="stat">
+                    <small>⏱ WAKTU</small>
+                    <strong id="time">60</strong>
                 </div>
 
-
-                <div class="stat-card combo-stat">
-
-                    <span>🔥 COMBO</span>
-
-                    <strong id="combo">
-                        x0
-                    </strong>
-
+                <div class="stat">
+                    <small>🔥 COMBO</small>
+                    <strong id="combo">x0</strong>
                 </div>
 
-            </header>
+            </div>
 
-
-            <!-- GAME CANVAS AREA -->
 
             <div id="gameArea">
 
                 <div class="sun">☀️</div>
 
-                <div class="mountain mountain1"></div>
-                <div class="mountain mountain2"></div>
+                <div class="cloud cloud1">☁️</div>
+                <div class="cloud cloud2">☁️</div>
 
-                <div class="grass"></div>
-
-
-                <!-- OBJECT GAME AKAN MUNCUL DISINI -->
+                <!-- Buah muncul otomatis -->
 
             </div>
 
 
-            <div class="game-info">
+            <div class="game-footer">
 
-                <span>
-                    👆 Klik atau sentuh buah!
-                </span>
+                <p>👆 Tekan buah untuk mendapatkan poin!</p>
 
-                <button
-                    id="soundBtn"
-                    class="sound-button"
-                >
-                    🔊
-                </button>
+                <button id="soundBtn">🔊</button>
 
             </div>
 
@@ -194,61 +140,45 @@
 
 
         <!-- ================= GAME OVER ================= -->
-
         <section id="gameOverScreen" class="screen">
 
-            <div class="gameover-card">
+            <div class="card gameover-card">
 
-                <div class="trophy">
-                    🏆
-                </div>
+                <div class="trophy">🏆</div>
 
                 <h1>GAME OVER!</h1>
 
-                <p class="result-name">
-                    Hebat, <span id="resultUsername">Player</span>!
+                <p>
+                    Hebat,
+                    <span id="resultUsername">Player</span>!
                 </p>
 
 
-                <div class="final-score">
+                <div class="final-score-box">
 
-                    <span>SKOR KAMU</span>
+                    <small>SKOR KAMU</small>
 
-                    <strong id="finalScore">
-                        0
-                    </strong>
+                    <strong id="finalScore">0</strong>
 
                 </div>
 
 
-                <p
-                    id="scoreMessage"
-                    class="score-message"
-                >
+                <p id="scoreMessage">
                     Kamu hebat!
                 </p>
 
 
-                <button
-                    id="playAgainBtn"
-                    class="main-button"
-                >
+                <button id="playAgainBtn" class="btn primary">
                     🔄 MAIN LAGI
                 </button>
 
 
-                <button
-                    id="leaderboardBtn2"
-                    class="secondary-button"
-                >
+                <button id="leaderboardBtn2" class="btn secondary">
                     🏆 LEADERBOARD
                 </button>
 
 
-                <button
-                    id="homeBtn"
-                    class="text-button"
-                >
+                <button id="homeBtn" class="back-btn">
                     ⬅ Kembali ke Menu
                 </button>
 
@@ -259,14 +189,13 @@
 
 
         <!-- ================= LEADERBOARD ================= -->
-
         <section id="leaderboardScreen" class="screen">
 
-            <div class="leaderboard-card">
+            <div class="card leaderboard-card">
 
                 <div class="leaderboard-title">
 
-                    <span>👑</span>
+                    <div class="crown">👑</div>
 
                     <h1>TOP PLAYERS</h1>
 
@@ -279,7 +208,7 @@
 
                     <span>RANK</span>
                     <span>PLAYER</span>
-                    <span>SCORE</span>
+                    <span>SKOR</span>
 
                 </div>
 
@@ -287,16 +216,13 @@
                 <div id="leaderboardList">
 
                     <p class="loading">
-                        Memuat leaderboard...
+                        ⏳ Memuat leaderboard...
                     </p>
 
                 </div>
 
 
-                <button
-                    id="backLeaderboardBtn"
-                    class="main-button"
-                >
+                <button id="backLeaderboardBtn" class="btn primary">
                     ⬅ KEMBALI
                 </button>
 
@@ -304,13 +230,7 @@
 
         </section>
 
-
     </main>
-
-
-    <!-- EFFECT LAYER -->
-
-    <div id="effectLayer"></div>
 
 
     <script src="script.js"></script>
