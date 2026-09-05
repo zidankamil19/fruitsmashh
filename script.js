@@ -3,7 +3,7 @@
 // ==========================================
 
 // GANTI DENGAN URL GOOGLE APPS SCRIPT KAMU
-const API_URL = "PASTE_GOOGLE_APPS_SCRIPT_URL_DI_SINI";
+const API_URL = "https://script.google.com/macros/s/AKfycbxXFTmtCMx3xp4XFhMF0ZggYtp6YkvME2p9_ItKDHX2BfUyRSp_3QoqadfB9Dt3DhwcQw/exec";
 
 
 // ==========================================
